@@ -152,17 +152,16 @@ WHERE n BETWEEN 1 AND 1000;
 GO
 
 -- 8. Populate Share table (1000 rows)
--- 8. Populate Share table (1000 rows)
 INSERT INTO Share (Sharer, ObjectId, ObjectTypeId, CreatedAt, Url, UrlApprove)
 SELECT TOP 1000
     u.UserId,
     o.ObjectId,
     o.ObjectTypeId,
-    DATEADD(DAY, -ABS(CHECKSUM(NEWID()) % 365), GETDATE()),
-    'share' + CAST(n AS VARCHAR(50)),
+    DATEADD(DAY, -ABS(CHECKSUM(NEWID()) % 365), '2025-07-24 10:29:00'),
+    'share_' + LEFT(CAST(NEWID() AS VARCHAR(36)), 8),
     CASE WHEN ABS(CHECKSUM(NEWID()) % 2) = 0 THEN 1 ELSE 0 END
 FROM (
-    SELECT ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS n
+    SELECT ROW_NUMBER() OVER (ORDER BY NEWID()) AS n
     FROM sys.objects s1 CROSS JOIN sys.objects s2
 ) AS nums
 CROSS JOIN (
@@ -171,12 +170,14 @@ CROSS JOIN (
     ORDER BY NEWID()
 ) u
 CROSS JOIN (
-    SELECT TOP 500 FolderId AS ObjectId, 1 AS ObjectTypeId FROM Folder ORDER BY NEWID()
-    UNION
-    SELECT TOP 500 FileId AS ObjectId, 2 AS ObjectTypeId FROM [File] ORDER BY NEWID()
+    SELECT 
+        ABS(CHECKSUM(NEWID()) % 1000) + 1 AS ObjectId,
+        CASE WHEN ABS(CHECKSUM(NEWID()) % 2) = 0 THEN 1 ELSE 2 END AS ObjectTypeId
+    FROM (SELECT TOP 1000 ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS rn FROM sys.objects s1 CROSS JOIN sys.objects s2) AS randomRows
 ) o
-WHERE n BETWEEN 1 AND 1000;
+WHERE nums.n BETWEEN 1 AND 1000;
 GO
+
 
 -- 9. Populate SharedUser table (1000 rows)
 INSERT INTO SharedUser (ShareId, UserId, PermissionId)
@@ -298,17 +299,23 @@ WHERE n BETWEEN 1 AND 1000;
 GO
 
 -- 17. Populate Recent table (1000 rows)
-INSERT INTO Recent (UserId, FileId, Log, DateTime)
+INSERT INTO Recent (UserId, ObjectId, ObjectTypeId, Log, DateTime)
 SELECT TOP 1000
     u.UserId,
-    f.FileId,
-    'Accessed file: File' + CAST(f.FileId AS NVARCHAR(255)),
-    DATEADD(DAY, -ABS(CHECKSUM(NEWID()) % 30), GETDATE())
-FROM (SELECT ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS n 
-      FROM sys.objects s1 CROSS JOIN sys.objects s2) AS nums
-CROSS JOIN (SELECT TOP 1000 UserId FROM [User] ORDER BY NEWID()) u
-CROSS JOIN (SELECT TOP 1000 FileId FROM [File] ORDER BY NEWID()) f
-WHERE n BETWEEN 1 AND 1000;
+    ABS(CHECKSUM(NEWID()) % 1000) + 1 AS ObjectId,
+    CASE WHEN ABS(CHECKSUM(NEWID()) % 2) = 0 THEN 1 ELSE 2 END AS ObjectTypeId,
+    'Accessed object: ' + CAST(ABS(CHECKSUM(NEWID()) % 1000) + 1 AS NVARCHAR(10)) AS Log,
+    DATEADD(DAY, -ABS(CHECKSUM(NEWID()) % 365), '2025-07-24 14:47:00') AS DateTime
+FROM (
+    SELECT ROW_NUMBER() OVER (ORDER BY NEWID()) AS n
+    FROM sys.objects s1 CROSS JOIN sys.objects s2
+) AS nums
+CROSS JOIN (
+    SELECT TOP 1000 UserId
+    FROM [User]
+    ORDER BY NEWID()
+) u
+WHERE nums.n BETWEEN 1 AND 1000;
 GO
 
 -- 18. Populate SearchHistory table (1000 rows)

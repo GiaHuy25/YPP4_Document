@@ -216,11 +216,12 @@ GO
 CREATE TABLE Recent (
     Id INT PRIMARY KEY IDENTITY(1,1),
     UserId INT,
-    FileId INT,
+    ObjectId INT,
+	ObjectTypeId INT,
     Log NVARCHAR(MAX),
     DateTime DATETIME2,
     FOREIGN KEY (UserId) REFERENCES [User](UserId),
-    FOREIGN KEY (FileId) REFERENCES [File](FileId)
+    FOREIGN KEY (ObjectTypeId) REFERENCES ObjectType(ObjectTypeId)
 );
 GO
 
@@ -311,5 +312,4 @@ CREATE TABLE FileContent (
     CreatedAt DATETIME DEFAULT GETDATE()
 );
 GO
-
 
