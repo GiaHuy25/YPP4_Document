@@ -92,3 +92,30 @@ where s.Sharer = @userId
 select count(*)
 from Share
 group by Share.Sharer
+
+select *
+from Share
+where ObjectId = 654
+
+
+select 
+	u.Name as UserName,
+	f.Name as FileName,
+	fo.Name as FolderName,
+	p.Name as PermissionName
+from Share s
+	join SharedUser su on s.ShareId = su.ShareId
+	join [User] u on su.UserId = u.UserId
+	join Permission p on su.PermissionId = p.PermissionId
+	left join [File] f on s.ObjectTypeId =2 and s.ObjectId = f.FileId
+	left join [Folder] fo on s.ObjectTypeId =1 and s.ObjectId = fo.FolderId
+where s.ObjectId = 654
+
+
+select *
+from [File] f
+where f.FileId = 654
+
+select *
+from [Folder] f
+where f.FolderId = 654
