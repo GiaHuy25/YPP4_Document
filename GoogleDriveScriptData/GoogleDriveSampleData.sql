@@ -123,6 +123,8 @@ FROM #TempFolder;
 DROP TABLE #TempFolder;
 GO
 
+select * from Folder
+
 -- 6. Populate FileType table (4 rows)
 INSERT INTO FileType (Name, Icon)
 VALUES 
@@ -141,9 +143,9 @@ SELECT TOP 1000
     'File' + CAST(n AS NVARCHAR(255)),
     f.Path + '/file' + CAST(n AS NVARCHAR(255)),
     ABS(CHECKSUM(NEWID()) % 4) + 1,
-    DATEADD(DAY, -ABS(CHECKSUM(NEWID()) % 30), GETDATE()),
+    DATEADD(DAY, -ABS(CHECKSUM(NEWID()) % 30), '2025-07-24 21:52:00'),
     CASE WHEN n % 10 = 0 THEN 'deleted' ELSE 'active' END,
-    DATEADD(DAY, -ABS(CHECKSUM(NEWID()) % 365), GETDATE())
+    DATEADD(DAY, -ABS(CHECKSUM(NEWID()) % 365), '2025-07-24 21:52:00')
 FROM (SELECT ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS n 
       FROM sys.objects s1 CROSS JOIN sys.objects s2) AS nums
 CROSS JOIN (SELECT TOP 1000 UserId FROM [User] ORDER BY NEWID()) u
@@ -151,6 +153,7 @@ CROSS JOIN (SELECT TOP 1000 FolderId, Path FROM Folder ORDER BY NEWID()) f
 WHERE n BETWEEN 1 AND 1000;
 GO
 
+select * from [file]
 -- 8. Populate Share table (1000 rows)
 INSERT INTO Share (Sharer, ObjectId, ObjectTypeId, CreatedAt, Url, UrlApprove)
 SELECT TOP 1000
@@ -178,6 +181,7 @@ CROSS JOIN (
 WHERE nums.n BETWEEN 1 AND 1000;
 GO
 
+select * from Share
 
 -- 9. Populate SharedUser table (1000 rows)
 INSERT INTO SharedUser (ShareId, UserId, PermissionId)
@@ -185,12 +189,29 @@ SELECT TOP 1000
     s.ShareId,
     u.UserId,
     ABS(CHECKSUM(NEWID()) % 3) + 1
-FROM (SELECT ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS n 
-      FROM sys.objects s1 CROSS JOIN sys.objects s2) AS nums
-CROSS JOIN (SELECT TOP 1000 ShareId FROM Share ORDER BY NEWID()) s
-CROSS JOIN (SELECT TOP 1000 UserId FROM [User] ORDER BY NEWID()) u
-WHERE s.ShareId <= 1000 AND u.UserId <= 1000 AND n BETWEEN 1 AND 1000;
+FROM (
+    SELECT ROW_NUMBER() OVER (ORDER BY NEWID()) AS n
+    FROM sys.objects s1 CROSS JOIN sys.objects s2
+) AS nums
+CROSS JOIN (
+    SELECT TOP 1000 ShareId
+    FROM Share
+    ORDER BY NEWID()
+) s
+CROSS JOIN (
+    SELECT UserId
+    FROM (
+        SELECT 
+            ABS(CHECKSUM(NEWID()) % 1000) + 1 AS UserId,
+            ROW_NUMBER() OVER (PARTITION BY ABS(CHECKSUM(NEWID()) % 1000) + 1 ORDER BY NEWID()) AS rn
+        FROM (SELECT TOP 1200 ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS dummy FROM sys.objects s1 CROSS JOIN sys.objects s2) AS base
+    ) AS userPool
+    WHERE rn <= 3 -- Limit each UserId to 3 appearances
+) u
+WHERE nums.n BETWEEN 1 AND 1000;
 GO
+
+select * from SharedUser
 
 -- 10. Populate FileVersion table (1000 rows)
 INSERT INTO FileVersion (FileId, Version, Path, CreatedAt, UpdateBy, IsCurrent, VersionFile, Size)
@@ -210,6 +231,8 @@ CROSS JOIN (SELECT TOP 1000 UserId FROM [User] ORDER BY NEWID()) u
 WHERE n BETWEEN 1 AND 1000;
 GO
 
+select * from FileVersion
+
 -- 11. Populate Trash table (1000 rows)
 INSERT INTO Trash (ObjectId, ObjectTypeId, RemovedDatetime, UserId, IsPermanent)
 SELECT TOP 1000
@@ -228,6 +251,8 @@ CROSS JOIN (
 ) o
 WHERE n BETWEEN 1 AND 1000;
 GO
+
+select * from Trash
 
 -- 12. Populate Product table (4 rows)
 INSERT INTO [Product] (Name, Cost, Duration)
@@ -263,6 +288,8 @@ CROSS JOIN (SELECT TOP 4 ProductId FROM [Product] ORDER BY NEWID()) p
 CROSS JOIN (SELECT TOP 4 PromotionId FROM Promotion ORDER BY NEWID()) pr
 WHERE n BETWEEN 1 AND 1000;
 GO
+
+select * from UserProduct
 
 -- 15. Populate BannedUser table (1000 rows)
 INSERT INTO BannedUser (UserId, BannedUserId, BannedAt)
@@ -394,7 +421,7 @@ GO
 INSERT INTO FileContent (FileId, ContentChunk, ChunkIndex, CreatedAt)
 SELECT TOP 1000
     f.FileId,
-    'Content chunk for file' + CAST(n AS NVARCHAR(255)),
+    'Content chunk for file' + CAST(f.FileId AS NVARCHAR(255)),
     n,
     DATEADD(DAY, -ABS(CHECKSUM(NEWID()) % 365), GETDATE())
 FROM (SELECT ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS n 

@@ -24,25 +24,39 @@ join [User] u on su.UserId = u.UserId
 join Setting s on su.SettingId = s.SettingId
 where u.UserId =1
 
--- select my folder/file
+-- select login user file
 select 
 	u.Name as UserName,
 	f.Name as FileName,
-	fo.Name as FolderName
 from [File] f 
 join [User] u on f.OwnerId = u.UserId
-join [Folder] fo on u.UserId = fo.OwnerId
 where u.UserId =1
 
--- select shared folder/file with me
+-- select login user folder
+select 
+	u.Name as UserName,
+	fo.Name as FolderName
+from [Folder] fo
+join [User] u on fo.OwnerId = u.UserId
+where u.UserId =1
+
+-- select shared file with login user
 select 
 	u.Name as UserName,
 	f.Name as FileName,
-	fo.Name as FolderName
 from SharedUser su
 join [User] u on su.UserId = u.UserId
 join Share s on su.ShareId = s.ShareId
 left join [File] f on s.ObjectTypeId = 2 and s.ObjectId = f.FileId
+where su.UserId = 397
+
+-- select shared folder with login user
+select 
+	u.Name as UserName,
+	fo.Name as FolderName
+from SharedUser su
+join [User] u on su.UserId = u.UserId
+join Share s on su.ShareId = s.ShareId
 left join [Folder] fo on s.ObjectTypeId =1 and s.ObjectId = fo.FolderId
 where su.UserId = 397
 
@@ -50,16 +64,24 @@ where su.UserId = 397
 select top 10
 	u.Name as UserName,
 	f.Name as FileName,
-	fo.Name as FolderName,
 	r.Log as Log,
 	r.DateTime as DateTime
 from Recent r
 join [User] u on r.UserId = u.UserId
 left join [File] f on r.ObjectTypeId = 2 and r.ObjectId = f.FileId
-left join [Folder] fo on r.ObjectTypeId = 1 and r.ObjectId = fo.FolderId
 where r.UserId = 800
-order by r.DateTime DESC
 
+--Recomment folder
+select top 10
+	u.Name as UserName,
+	fo.Name as FolderName,
+	r.Log as Log,
+	r.DateTime as DateTime
+from Recent r
+join [User] u on r.UserId = u.UserId
+left join [Folder] fo on r.ObjectTypeId = 1 and r.ObjectId = fo.FolderId
+where r.UserId = 435  
+order by r.DateTime DESC
 
 select * from Recent
 -- trash screen
