@@ -2,10 +2,6 @@ USE GoogleDrive
 GO
 
 
-select u.name, bu.BannedUserId
- from dbo.[User] u
- join BannedUser bu on bu.BannedUserId = u.UserId
- where bu.UserId = 523
  -- Home screen
  -- select User information
  select 
@@ -27,7 +23,7 @@ where u.UserId =1
 -- select login user file
 select 
 	u.Name as UserName,
-	f.Name as FileName,
+	f.Name as FileName
 from [File] f 
 join [User] u on f.OwnerId = u.UserId
 where u.UserId =1
@@ -43,12 +39,15 @@ where u.UserId =1
 -- select shared file with login user
 select 
 	u.Name as UserName,
-	f.Name as FileName,
+	f.Name as FileName
 from SharedUser su
 join [User] u on su.UserId = u.UserId
 join Share s on su.ShareId = s.ShareId
-left join [File] f on s.ObjectTypeId = 2 and s.ObjectId = f.FileId
-where su.UserId = 397
+join [File] f on s.ObjectTypeId = 2 and s.ObjectId = f.FileId
+where su.UserId = 7
+
+select * from Share
+select * from Shareduser where shareId =3
 
 -- select shared folder with login user
 select 
@@ -57,9 +56,11 @@ select
 from SharedUser su
 join [User] u on su.UserId = u.UserId
 join Share s on su.ShareId = s.ShareId
-left join [Folder] fo on s.ObjectTypeId =1 and s.ObjectId = fo.FolderId
-where su.UserId = 397
+join [Folder] fo on s.ObjectTypeId =1 and s.ObjectId = fo.FolderId
+where su.UserId = 208
 
+select * from share where ObjectTypeId =1
+select * from SharedUser where ShareId = 2
 --Recomment file/folder
 select top 10
 	u.Name as UserName,
@@ -68,8 +69,11 @@ select top 10
 	r.DateTime as DateTime
 from Recent r
 join [User] u on r.UserId = u.UserId
-left join [File] f on r.ObjectTypeId = 2 and r.ObjectId = f.FileId
-where r.UserId = 800
+join [File] f on r.ObjectTypeId = 2 and r.ObjectId = f.FileId
+where r.UserId = 319
+order by r.DateTime DESC
+
+select * from Recent
 
 --Recomment folder
 select top 10
@@ -79,23 +83,34 @@ select top 10
 	r.DateTime as DateTime
 from Recent r
 join [User] u on r.UserId = u.UserId
-left join [Folder] fo on r.ObjectTypeId = 1 and r.ObjectId = fo.FolderId
-where r.UserId = 435  
+join [Folder] fo on r.ObjectTypeId = 1 and r.ObjectId = fo.FolderId
+where r.UserId = 231  
 order by r.DateTime DESC
 
 select * from Recent
 -- trash screen
+--select file have been deleted
  SELECT 
     t.TrashId,
     ot.Name AS ObjectType,
     f.Name AS FileName,
+    t.RemovedDatetime,
+    t.IsPermanent
+FROM Trash t
+JOIN ObjectType ot ON t.ObjectTypeId = ot.ObjectTypeId
+JOIN [File] f ON t.ObjectTypeId = 2 AND t.ObjectId = f.FileId
+WHERE t.UserId = 500;
+
+--select folder have been deleted
+ SELECT 
+    t.TrashId,
+    ot.Name AS ObjectType,
     fo.Name AS FolderName,
     t.RemovedDatetime,
     t.IsPermanent
 FROM Trash t
 JOIN ObjectType ot ON t.ObjectTypeId = ot.ObjectTypeId
-LEFT JOIN [File] f ON t.ObjectTypeId = 2 AND t.ObjectId = f.FileId
-LEFT JOIN Folder fo ON t.ObjectTypeId = 1 AND t.ObjectId = fo.FolderId
+JOIN Folder fo ON t.ObjectTypeId = 1 AND t.ObjectId = fo.FolderId
 WHERE t.UserId = 500;
 
 -- Stared screen

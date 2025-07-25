@@ -141,7 +141,7 @@ SELECT TOP 1000
     u.UserId,
     ABS(CHECKSUM(NEWID()) % 1000000000),
     'File' + CAST(n AS NVARCHAR(255)),
-    f.Path + '/file' + CAST(n AS NVARCHAR(255)),
+    f.Path + '/File' + CAST(n AS NVARCHAR(255)),  -- Standardized to 'File' for consistency
     ABS(CHECKSUM(NEWID()) % 4) + 1,
     DATEADD(DAY, -ABS(CHECKSUM(NEWID()) % 30), '2025-07-24 21:52:00'),
     CASE WHEN n % 10 = 0 THEN 'deleted' ELSE 'active' END,
