@@ -345,6 +345,9 @@ CROSS JOIN (
 WHERE nums.n BETWEEN 1 AND 1000;
 GO
 
+insert into Recent(UserId,ObjectId,ObjectTypeId,ActionLog) values
+()
+
 -- 18. Populate SearchHistory table (1000 rows)
 INSERT INTO SearchHistory (UserId, SearchToken, SearchDatetime)
 SELECT TOP 1000

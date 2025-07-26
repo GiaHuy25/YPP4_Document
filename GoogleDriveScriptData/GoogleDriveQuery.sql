@@ -21,12 +21,15 @@ join Setting s on su.SettingId = s.SettingId
 where u.UserId =1
 
 -- select login user file
+Declare @LoginUser int = 1 
 select 
 	u.Name as UserName,
 	f.Name as FileName
 from [File] f 
 join [User] u on f.OwnerId = u.UserId
-where u.UserId =1
+where u.UserId =@LoginUser
+
+
 
 -- select login user folder
 select 
@@ -67,11 +70,11 @@ select top 10
 	f.Name as FileName,
 	r.Log as Log,
 	r.DateTime as DateTime
-from Recent r
+from Recent r -- fix name of table and property
 join [User] u on r.UserId = u.UserId
 join [File] f on r.ObjectTypeId = 2 and r.ObjectId = f.FileId
 where r.UserId = 319
-order by r.DateTime DESC
+order by r.DateTime DESC -- fix 
 
 select * from Recent
 
