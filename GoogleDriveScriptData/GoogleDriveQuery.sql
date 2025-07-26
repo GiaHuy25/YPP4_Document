@@ -218,17 +218,25 @@ join [User] u on up.UserId = u.UserId
 join Promotion pr on up.PromotionId = pr.PromotionId
 where u.UserId = 100
 
--- select file/folder share by user
+-- select file share by user
 select 
 	u.Name as UserName,
 	f.Name as FileName,
-	fo.Name as FolderName
 from Share s
 join [User] u on s.Sharer = u.UserId
 join ObjectType ot on s.ObjectTypeId = ot.ObjectTypeId
 left join [File] f on s.ObjectTypeId = 2 and s.ObjectId = f.FileId
-left join [Folder] fo on s.ObjectTypeId =1 and s.ObjectId = fo.FolderId
 where s.Sharer = 100
+
+-- select folder share by user
+select 
+	u.Name as UserName,
+	fo.Name as FolderName
+from Share s
+join [User] u on s.Sharer = u.UserId
+join ObjectType ot on s.ObjectTypeId = ot.ObjectTypeId
+left join [Folder] fo on s.ObjectTypeId =1 and s.ObjectId = fo.FolderId
+where s.Sharer = 394
 
 select count(*)
 from Share
