@@ -391,3 +391,38 @@ select
 	uf.UserFileName
 from UserFile uf
 where FileId = 1
+
+---Sort UserFile By ShareUser where UserId = 2---
+declare @Sharer int = 2
+declare @shared int = 102
+select 
+	ft.Icon,
+	uf.UserFileName as NameOfFile,
+	a1.UserName as SharerName,
+	s.CreatedAt as ShareDateTime,
+	a.UserName as sharedName
+from SharedUser su
+join Share s on su.ShareId = s.ShareId
+left join UserFile uf on s.ObjectTypeId = 2 and s.ObjectId = uf.FileId
+join FileType ft on uf.FileTypeId = ft.FileTypeId
+join Account a on su.UserId = a.UserId
+join Account a1 on s.Sharer = a1.UserId
+where su.UserId = @shared and s.Sharer = @Sharer
+
+select * from SharedUser
+
+---sort UserFile by FileType---
+declare @OwnerId int = 1
+declare @FileType int = 3
+
+Select 
+	ft.Icon,
+	uf.UserFileName,
+	a.UserName as OwnerName,
+	uf.CreatedAt
+from UserFile uf
+join FileType ft on uf.FileTypeId = ft.FileTypeId
+join Account a on uf.OwnerId = a.UserId
+where uf.FileTypeId = @FileType and uf.OwnerId = @OwnerId
+
+---Sort by Action recent---
