@@ -1,8 +1,6 @@
 USE GoogleDrive
 GO
 
-
-
  -- Home screen
  -- select User information
  select 
@@ -10,6 +8,7 @@ GO
 	a.Email as Email
  from Account a
  where a.UserId =1 
+
 
 -- select User Setting
 select 
@@ -21,6 +20,7 @@ join Account a on su.UserId = a.UserId
 join AppSetting s on su.SettingId = s.SettingId
 where a.UserId =1
 
+
 -- select login user file
 Declare @LoginUser int = 1 
 select 
@@ -31,7 +31,6 @@ join Account a on uf.OwnerId = a.UserId
 where a.UserId =@LoginUser
 
 
-
 -- select login user folder
 select 
 	a.UserName ,
@@ -39,6 +38,7 @@ select
 from Folder fo
 join Account a on fo.OwnerId = a.UserId
 where a.UserId =1
+
 
 -- select shared file with login user
 select 
@@ -54,6 +54,7 @@ where su.UserId = 102
 select * from Share
 select * from Shareduser where shareId =2
 
+
 -- select shared folder with login user
 select 
 	a.UserName,
@@ -66,6 +67,8 @@ where su.UserId = 101
 
 select * from share where ObjectTypeId =1
 select * from SharedUser where ShareId = 1
+
+
 --Recomment file/folder
 select top 10
 	a.UserName,
@@ -80,6 +83,7 @@ order by ar.ActionDateTime DESC
 
 select * from ActionRecent
 
+
 --Recomment folder
 select top 10
 	a.UserName,
@@ -92,7 +96,9 @@ join Folder fo on ar.ObjectTypeId = 1 and ar.ObjectId = fo.FolderId
 where ar.UserId = 3  
 order by ar.ActionDateTime DESC
 
-select * from Recent
+select * from ActionRecent
+
+
 -- trash screen
 --select file have been deleted
  SELECT 
@@ -107,6 +113,8 @@ JOIN UserFile f ON t.ObjectTypeId = 2 AND t.ObjectId = f.FileId
 WHERE t.UserId = 704;
 
 select * from Trash
+
+
 --select folder have been deleted
  SELECT 
     t.TrashId,
@@ -118,6 +126,7 @@ FROM Trash t
 JOIN ObjectType ot ON t.ObjectTypeId = ot.ObjectTypeId
 JOIN Folder fo ON t.ObjectTypeId = 1 AND t.ObjectId = fo.FolderId
 WHERE t.UserId = 1;
+
 
 -- Stared screen
 -- Select file
@@ -135,6 +144,7 @@ where fa.OwnerId = 794
 select * from FavoriteObject where OwnerId = 794
 select * from UserFile f where f.FileId = 875
 
+
 --product Screen
 -- select all of product
 select
@@ -142,6 +152,7 @@ select
 	Cost,
 	Duration
 from ProductItem
+
 
 -- select Product bought by user
 select 
@@ -162,6 +173,7 @@ select * from Promotion where PromotionId = 1 or PromotionId = 4
 select * from ProductItem
 select * from UserProduct up where up.UserId = 100
 
+
 -- select Top 10 Payers 
 select top 10
 	pro.ProductName,
@@ -175,6 +187,7 @@ join Account a on up.UserId = a.UserId
 join ProductItem pro on up.ProductId = pro.ProductId
 join Promotion po on up.PromotionId = po.PromotionId
 order by TotalCost DESC
+
 
 -- select file/folder shared for user with userid = 101
 select 
@@ -196,8 +209,9 @@ select * from share s where s.ShareId = 1
 select * from UserFile f where f.FileId = 298
 select * from Account where UserId = 101
 
+
 --select top 5 largest file 
-select top 5
+select distinct top 5
 	f.UserFileName,
 	a.UserName as OwnerName,
 	f.Size as FileSize
@@ -217,6 +231,7 @@ JOIN Account Banned ON BU.UserId = Banned.UserId
 JOIN Account Banner ON BU.BannedUserId = Banner.UserId
 ORDER BY BU.BannedAt DESC;
 
+
 --select product bought by user 
 select 
 	p.ProductName,
@@ -230,6 +245,7 @@ join Account a on up.UserId = a.UserId
 join Promotion pr on up.PromotionId = pr.PromotionId
 where a.UserId = 100
 
+
 -- select file share by user
 select 
 	a.UserName,
@@ -239,6 +255,7 @@ join Account a on s.Sharer = a.UserId
 join ObjectType ot on s.ObjectTypeId = ot.ObjectTypeId
 left join UserFile f on s.ObjectTypeId = 2 and s.ObjectId = f.FileId
 where s.Sharer = 100
+
 
 -- select folder share by user
 select 
@@ -257,6 +274,7 @@ group by Share.Sharer
 select *
 from Share
 where ObjectId = 654
+
 
 -- select user was shared object with objectId = 654
 select 
@@ -281,6 +299,7 @@ select *
 from [Folder] f
 where f.FolderId = 654
 
+
 --User Management: Retrieve the names and email addresses of all users who have used more than 50% of their storage capacity.
 select top 5
 	a.UserName,
@@ -302,3 +321,55 @@ join Account a on fo.OwnerId = a.UserId
 join Color c on fo.ColorId = c.ColorId
 where fo.OwnerId = 20
 
+
+---Select childrent of folder
+WITH RecursiveFolders AS (
+    -- Anchor member: Start with FolderId = 1
+    SELECT FolderId, FolderName, ParentId, FolderPath
+    FROM Folder
+    WHERE FolderId = 1
+    UNION ALL
+    -- Recursive member: Join with Folder to get all descendants
+    SELECT f.FolderId, f.FolderName, f.ParentId, f.FolderPath
+    FROM Folder f
+    INNER JOIN RecursiveFolders rf ON f.ParentId = rf.FolderId
+    WHERE f.FolderPath LIKE rf.FolderPath + '/%'
+)
+SELECT 
+    rf.FolderName,
+    rf.ParentId,
+    rf.FolderPath,
+    fo.FolderName AS ParentFolderName
+FROM RecursiveFolders rf
+LEFT JOIN Folder fo ON rf.ParentId = fo.FolderId
+WHERE rf.FolderId != 1 -- Exclude the root folder itself, only show subfolders
+ORDER BY rf.FolderPath;
+
+
+-- Full-text search query
+-- Searches for files containing the term 'project' or 'proposal'
+DECLARE @k1 FLOAT = 1.2; -- Term frequency saturation parameter
+DECLARE @b FLOAT = 0.75; -- Length normalization parameter
+DECLARE @avgdl FLOAT = (SELECT AVG(CAST(DocumentLength AS FLOAT)) FROM SearchIndex WHERE ObjectTypeId = 1); -- Average document length
+
+SELECT 
+    f.FileId,
+    f.UserFileName,
+    s.Term,
+    s.TermFrequency,
+	s.TermPositions,
+    t.IDF,
+    (t.IDF * s.TermFrequency * (@k1 + 1)) / 
+    (s.TermFrequency + @k1 * (1 - @b + @b * (s.DocumentLength / @avgdl))) AS BM25_Score
+FROM SearchIndex s
+JOIN TermIDF t ON s.Term = t.Term
+JOIN UserFile f ON s.ObjectId = f.FileId
+WHERE s.ObjectTypeId = 1 
+AND s.Term IN ('project', 'proposal')
+ORDER BY BM25_Score DESC;
+
+
+select 
+	uf.UserFileName
+from UserFile uf
+where FileId = 1

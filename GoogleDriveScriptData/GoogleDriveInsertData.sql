@@ -2150,7 +2150,6 @@ VALUES
 
 SET NOCOUNT ON;
 
-
 ----Insert Table Share----
 
 INSERT INTO Share (Sharer, ObjectId, ObjectTypeId, CreatedAt, ShareUrl, UrlApprove)
@@ -4017,3 +4016,111 @@ INSERT INTO SettingUser (SettingId, UserId) VALUES
 INSERT INTO SettingUser (SettingId, UserId) VALUES
 (1, 10), (3, 10), (6, 10), (9, 10), (11, 10), (14, 10), (15, 10), (17, 10);
 SET NOCOUNT ON;
+
+
+-- Insert sample data into FileContent (10 rows)
+INSERT INTO FileContent (FileId, ContentChunk, ChunkIndex, CreatedAt)
+VALUES
+(1, 'Project proposal for new software development', 1, GETDATE()),
+(1, 'Requirements analysis and system design', 2, GETDATE()),
+(2, 'Meeting notes from team sync on 2025-07-25', 1, GETDATE()),
+(3, 'Financial report Q2 2025 summary', 1, GETDATE()),
+(4, 'Marketing campaign strategy for product launch', 1, GETDATE()),
+(5, 'User guide for cloud storage application', 1, GETDATE()),
+(6, 'Presentation slides for annual review', 1, GETDATE()),
+(7, 'Contract agreement with vendor X', 1, GETDATE()),
+(8, 'Research paper on machine learning trends', 1, GETDATE()),
+(9, 'Employee handbook updated 2025', 1, GETDATE());
+
+-- Insert sample data into SearchIndex (10 rows)
+-- Assuming ObjectTypeId 1 = File, ObjectId references FileId from UserFile
+INSERT INTO SearchIndex (ObjectId, ObjectTypeId, Term, TermFrequency, DocumentLength, TermPositions)
+VALUES
+(1, 1, 'project', 1, 8, '1'),
+(1, 1, 'proposal', 1, 8, '2'),
+(1, 1, 'software', 1, 8, '3'),
+(1, 1, 'development', 1, 8, '4'),
+(1, 1, 'requirements', 1, 8, '5'),
+(1, 1, 'analysis', 1, 8, '6'),
+(1, 1, 'system', 1, 8, '7'),
+(1, 1, 'design', 1, 8, '8'),
+(2, 1, 'meeting', 1, 4, '1'),
+(2, 1, 'notes', 1, 4, '2'),
+(2, 1, 'team', 1, 4, '3'),
+(2, 1, 'sync', 1, 4, '4'),
+(3, 1, 'financial', 1, 3, '1'),
+(3, 1, 'report', 1, 3, '2'),
+(3, 1, 'summary', 1, 3, '3'),
+(4, 1, 'marketing', 1, 5, '1'),
+(4, 1, 'campaign', 1, 5, '2'),
+(4, 1, 'strategy', 1, 5, '3'),
+(4, 1, 'product', 1, 5, '4'),
+(4, 1, 'launch', 1, 5, '5'),
+(5, 1, 'user', 1, 5, '1'),
+(5, 1, 'guide', 1, 5, '2'),
+(5, 1, 'cloud', 1, 5, '3'),
+(5, 1, 'storage', 1, 5, '4'),
+(5, 1, 'application', 1, 5, '5'),
+(6, 1, 'presentation', 1, 4, '1'),
+(6, 1, 'slides', 1, 4, '2'),
+(6, 1, 'annual', 1, 4, '3'),
+(6, 1, 'review', 1, 4, '4'),
+(7, 1, 'contract', 1, 3, '1'),
+(7, 1, 'agreement', 1, 3, '2'),
+(7, 1, 'vendor', 1, 3, '3'),
+(8, 1, 'research', 1, 5, '1'),
+(8, 1, 'paper', 1, 5, '2'),
+(8, 1, 'machine', 1, 5, '3'),
+(8, 1, 'learning', 1, 5, '4'),
+(8, 1, 'trends', 1, 5, '5'),
+(9, 1, 'employee', 1, 2, '1'),
+(9, 1, 'handbook', 1, 2, '2');
+
+delete from SearchIndex
+select * from SearchIndex
+
+-- Insert sample data into TermIDF (10 rows)
+-- IDF calculated as log((N - n(t) + 0.5) / (n(t) + 0.5) + 1), assuming N=100 documents
+INSERT INTO TermIDF (Term, IDF, LastUpdated)
+VALUES
+('agreement', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('analysis', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('annual', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('application', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('campaign', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('cloud', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('contract', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('design', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('development', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('employee', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('financial', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('guide', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('handbook', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('launch', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('learning', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('machine', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('marketing', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('meeting', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('notes', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('paper', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('presentation', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('product', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('project', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('proposal', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('report', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('requirements', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('research', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('review', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('slides', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('software', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('storage', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('strategy', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('summary', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('sync', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('system', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('team', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('trends', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('user', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
+('vendor', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE());
+
+select * from TermIDF
