@@ -3,14 +3,16 @@ GO
 
  -- Home screen
  -- select User information
+ Declare @userId int = 1
  select 
 	a.UserName as UserName,
 	a.Email as Email
  from Account a
- where a.UserId =1 
+ where a.UserId =@userId 
 
 
 -- select User Setting
+Declare @userId int = 1;
 select 
 	a.UserName as UserName,
 	s.SettingKey,
@@ -18,7 +20,7 @@ select
 from SettingUser su
 join Account a on su.UserId = a.UserId
 join AppSetting s on su.SettingId = s.SettingId
-where a.UserId =1
+where a.UserId =@userId
 
 
 -- select login user file
@@ -32,15 +34,17 @@ where a.UserId =@LoginUser
 
 
 -- select login user folder
+Declare @userId int = 1
 select 
 	a.UserName ,
 	fo.FolderName
 from Folder fo
 join Account a on fo.OwnerId = a.UserId
-where a.UserId =1
+where a.UserId =@userId
 
 
 -- select shared file with login user
+Declare @userId int = 102
 select 
 	a.UserName,
 	f.UserFileName
@@ -48,7 +52,7 @@ from SharedUser su
 join Account a on su.UserId = a.UserId
 join Share s on su.ShareId = s.ShareId
 join UserFile f on s.ObjectTypeId = 2 and s.ObjectId = f.FileId
-where su.UserId = 102
+where su.UserId = @userId
 
 
 select * from Share
@@ -56,6 +60,7 @@ select * from Shareduser where shareId =2
 
 
 -- select shared folder with login user
+Declare @userId int = 101
 select 
 	a.UserName,
 	fo.FolderName
@@ -63,13 +68,14 @@ from SharedUser su
 join Account a on su.UserId = a.UserId
 join Share s on su.ShareId = s.ShareId
 join [Folder] fo on s.ObjectTypeId =1 and s.ObjectId = fo.FolderId
-where su.UserId = 101
+where su.UserId = @userId
 
 select * from share where ObjectTypeId =1
 select * from SharedUser where ShareId = 1
 
 
 --Recomment file/folder
+Declare @userId int = 2
 select top 10
 	a.UserName,
 	f.UserFileName,
@@ -78,13 +84,14 @@ select top 10
 from ActionRecent ar 
 join Account a on ar.UserId = a.UserId
 join UserFile f on ar.ObjectTypeId = 2 and ar.ObjectId = f.FileId
-where ar.UserId = 2
+where ar.UserId = @userId
 order by ar.ActionDateTime DESC
 
 select * from ActionRecent
 
 
 --Recomment folder
+Declare @userId int = 3
 select top 10
 	a.UserName,
 	fo.FolderName,
@@ -93,7 +100,7 @@ select top 10
 from ActionRecent ar
 join Account a on ar.UserId = a.UserId
 join Folder fo on ar.ObjectTypeId = 1 and ar.ObjectId = fo.FolderId
-where ar.UserId = 3  
+where ar.UserId = @userId  
 order by ar.ActionDateTime DESC
 
 select * from ActionRecent
@@ -101,6 +108,7 @@ select * from ActionRecent
 
 -- trash screen
 --select file have been deleted
+Declare @userId int = 704
  SELECT 
     t.TrashId,
     ot.ObjectTypeName,
@@ -110,12 +118,13 @@ select * from ActionRecent
 FROM Trash t
 JOIN ObjectType ot ON t.ObjectTypeId = ot.ObjectTypeId
 JOIN UserFile f ON t.ObjectTypeId = 2 AND t.ObjectId = f.FileId
-WHERE t.UserId = 704;
+WHERE t.UserId = @userId;
 
 select * from Trash
 
 
 --select folder have been deleted
+Declare @userId int = 1
  SELECT 
     t.TrashId,
     ot.ObjectTypeName,
@@ -125,11 +134,12 @@ select * from Trash
 FROM Trash t
 JOIN ObjectType ot ON t.ObjectTypeId = ot.ObjectTypeId
 JOIN Folder fo ON t.ObjectTypeId = 1 AND t.ObjectId = fo.FolderId
-WHERE t.UserId = 1;
+WHERE t.UserId = @userId;
 
 
 -- Stared screen
 -- Select file
+Declare @userId int = 794
 select 
 	f.UserFileName,
 	a.USerName as FileOwnerName,
@@ -139,7 +149,7 @@ from FavoriteObject fa
 left join UserFile f on fa.ObjectTypeId = 2 and fa.ObjectId = f.FileId
 left join Account a on f.OwnerId = a.UserId 
 join FileType ft on f.FileTypeId = ft.FileTypeId
-where fa.OwnerId = 794
+where fa.OwnerId = @userId
 
 select * from FavoriteObject where OwnerId = 794
 select * from UserFile f where f.FileId = 875
@@ -155,6 +165,7 @@ from ProductItem
 
 
 -- select Product bought by user
+Declare @userId int = 100
 select 
 	pro.ProductName,
 	a.UserId,
@@ -167,7 +178,7 @@ from UserProduct up
 join Account a on up.UserId = a.UserId
 join Promotion po on up.PromotionId = po.PromotionId
 join ProductItem pro on up.ProductId = pro.ProductId
-where up.UserId = 100
+where up.UserId = @userId
 
 select * from Promotion where PromotionId = 1 or PromotionId = 4
 select * from ProductItem
@@ -190,6 +201,7 @@ order by TotalCost DESC
 
 
 -- select file/folder shared for user with userid = 101
+Declare @userId int = 101
 select 
 	a.UserName,
 	p.PermissionName,
@@ -201,7 +213,7 @@ join Share s on su.ShareId = s.ShareId
 join Permission p on su.PermissionId = p.PermissionId
 LEFT join Folder fo on s.ObjectTypeId = 1 and fo.FolderId = s.ObjectId
 LEFT join UserFile f on s.ObjectTypeId = 2 and f.FileId = s.ObjectId
-where su.UserId = 101
+where su.UserId = @userId
 
 
 select * from SharedUser su where su.SharedUserId = 500
@@ -233,6 +245,7 @@ ORDER BY BU.BannedAt DESC;
 
 
 --select product bought by user 
+Declare @userId int = 100
 select 
 	p.ProductName,
 	a.UserName,
@@ -243,10 +256,11 @@ from UserProduct up
 join ProductItem p on up.ProductId = p.ProductId
 join Account a on up.UserId = a.UserId
 join Promotion pr on up.PromotionId = pr.PromotionId
-where a.UserId = 100
+where a.UserId = @userId
 
 
 -- select file share by user
+Declare @userId int = 100
 select 
 	a.UserName,
 	f.UserFileName
@@ -254,10 +268,11 @@ from Share s
 join Account a on s.Sharer = a.UserId
 join ObjectType ot on s.ObjectTypeId = ot.ObjectTypeId
 left join UserFile f on s.ObjectTypeId = 2 and s.ObjectId = f.FileId
-where s.Sharer = 100
+where s.Sharer = @userId
 
 
 -- select folder share by user
+Declare @userId int = 1
 select 
 	a.UserName,
 	fo.FolderName
@@ -265,7 +280,7 @@ from Share s
 join Account a on s.Sharer = a.UserId
 join ObjectType ot on s.ObjectTypeId = ot.ObjectTypeId
 left join [Folder] fo on s.ObjectTypeId =1 and s.ObjectId = fo.FolderId
-where s.Sharer = 1
+where s.Sharer = @userId
 
 select count(*)
 from Share
@@ -276,7 +291,8 @@ from Share
 where ObjectId = 654
 
 
--- select user was shared object with objectId = 654
+-- select user was shared object with objectId = 5
+Declare @objectId int = 5
 select 
 	a.UserName,
 	f.UserFileName,
@@ -288,7 +304,7 @@ from Share s
 	join Permission p on su.PermissionId = p.PermissionId
 	left join UserFile f on s.ObjectTypeId =2 and s.ObjectId = f.FileId
 	left join [Folder] fo on s.ObjectTypeId =1 and s.ObjectId = fo.FolderId
-where s.ObjectId = 5
+where s.ObjectId = @objectId
 
 
 select *
@@ -312,6 +328,7 @@ select * from Account
 
 
 --Folder Structure: List all folders owned by a specific user (e.g., UserId = 1), including their full path and the name of the color associated with each folder.
+Declare @userId int = 20
 select 
 	fo.FolderPath,
 	c.ColorName,
@@ -319,7 +336,7 @@ select
 from [Folder] fo
 join Account a on fo.OwnerId = a.UserId
 join Color c on fo.ColorId = c.ColorId
-where fo.OwnerId = 20
+where fo.OwnerId = @userId
 
 
 ---Select childrent of folder
