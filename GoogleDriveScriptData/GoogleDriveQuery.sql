@@ -323,11 +323,12 @@ where fo.OwnerId = 20
 
 
 ---Select childrent of folder
+Declare @FolderId int = 1;
 WITH RecursiveFolders AS (
     -- Anchor member: Start with FolderId = 1
     SELECT FolderId, FolderName, ParentId, FolderPath
     FROM Folder
-    WHERE FolderId = 1
+    WHERE FolderId = @FolderId
     UNION ALL
     -- Recursive member: Join with Folder to get all descendants
     SELECT f.FolderId, f.FolderName, f.ParentId, f.FolderPath
