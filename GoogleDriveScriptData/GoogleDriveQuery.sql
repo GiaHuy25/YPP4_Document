@@ -427,6 +427,7 @@ where uf.FileTypeId = @FileType and uf.OwnerId = @OwnerId
 
 ---Sort by Action recent---
 WITH RecentObjects AS (
+
     SELECT 
         ar.ObjectId,
         ar.ObjectTypeId,
