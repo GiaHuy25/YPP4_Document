@@ -1003,6 +1003,7 @@ VALUES
  (N'jeffreycarter', N'vwalker@yahoo.com', N'26086ff129fb3da154368f6fdd3719436afbc282eef42cc2ccd10010aeae387a', '2024-06-10 02:16:01', N'https://placeimg.com/420/823/any', '2024-06-26 14:06:33', 35479748, 500000000),
  (N'wnguyen', N'andrewrichardson@hotmail.com', N'63cf2882980aea67efed1c9ba05c1b9e7be72cd9c4c15912391dd473ee36e228', '2024-10-15 20:19:04', N'https://placeimg.com/527/616/any', '2024-11-28 21:01:33', 50789116, 500000000),
  (N'jaredphillips', N'christine80@yahoo.com', N'f1ee10fb5ede66d202feb0ac404bc1b834bc84a804915c3aaa2bde0ab19a3862', '2024-08-30 08:23:57', N'https://www.lorempixel.com/687/991', '2025-07-14 05:09:43', 96314854, 100000000)
+ GO
  SET NOCOUNT ON
 
  ---- Insert table Color----
@@ -1017,16 +1018,19 @@ VALUES
 ('Gray', '/icons/colors/gray.png'),
 ('Black', '/icons/colors/black.png'),
 ('White', '/icons/colors/white.png')
+GO
 SET NOCOUNT ON
 
 ----Insert Table Permisson----
 INSERT INTO Permission (PermissionName)
 VALUES ('reader'), ('contributor'), ('owner')
+GO
 SET NOCOUNT ON
 
 ----Insert Table ObjectType----
 INSERT INTO ObjectType (ObjectTypeName)
 VALUES ('folder'), ('file')
+GO
 SET NOCOUNT ON
 ----Insert Table Folder----
 
@@ -2031,7 +2035,7 @@ INSERT INTO Folder (ParentId, OwnerId, FolderName, CreatedAt, UpdatedAt, FolderP
 (255, 2, 'Folder_998', '2025-05-09 12:53:30', '2025-05-16 12:53:30', '/64/255/998', 'active', 5),
 (NULL, 15, 'Folder_999', '2025-03-17 12:53:30', '2025-04-14 12:53:30', '/999', 'active', 10),
 (375, 16, 'Folder_1000', '2025-07-14 12:53:30', '2025-07-22 12:53:30', '/375/1000', 'deleted', 8)
-
+GO
 SET NOCOUNT ON;
 
 ----Insert Table FileType----
@@ -2041,6 +2045,7 @@ VALUES
     ('excel', 'excel.png'),
     ('image', 'image.png'),
     ('video', 'video.png');
+GO
 SET NOCOUNT ON;
 
 
@@ -2147,7 +2152,7 @@ VALUES
 (8, 18, 3145728, 'Draft2.docx', '8/98', NULL, 1, '2025-07-23 14:45:00', 'Active', '2025-07-23 13:30:00'),
 (9, 19, 94371840, 'Seminar2.mp4', '9/99', '9/99_thumb.jpg', 4, '2025-07-24 16:00:00', 'Active', '2025-07-24 15:00:00'),
 (10, 20, 204800, 'Plan3.txt', '10/100', NULL, 1, '2025-07-25 08:15:00', 'Active', '2025-07-25 07:00:00');
-
+GO
 SET NOCOUNT ON;
 
 ----Insert Table Share----
@@ -2254,7 +2259,7 @@ VALUES
 (98, 98, 2, '2025-07-20 11:00:00', '/share/98', 0),
 (99, 9, 1, '2025-07-21 13:00:00', '/share/99', 1),
 (100, 100, 2, '2025-07-22 08:30:00', '/share/100', 0);
-
+GO
 SET NOCOUNT ON;
 
 ----Insert Table SharedUser----
@@ -2360,7 +2365,7 @@ VALUES
 (98, 198, 2, '2025-07-20 11:00:00', NULL),
 (99, 199, 3, '2025-07-21 13:00:00', '2025-07-21 14:00:00'),
 (100, 200, 1, '2025-07-22 08:30:00', NULL);
-
+GO
 SET NOCOUNT ON;
 
 
@@ -2466,6 +2471,7 @@ VALUES
 (49, 2, '9/49/v2', '2025-07-20 08:00:00', 348, 1, 'file49_v2.mp4', 99000000),
 (50, 1, '10/50/v1', '2025-07-21 09:00:00', 349, 0, 'file50_v1.txt', 102400),
 (50, 2, '10/50/v2', '2025-07-22 11:30:00', 350, 1, 'file50_v2.txt', 110000);
+GO
 SET NOCOUNT ON;
 
 ----Insert Table Trash----
@@ -2573,6 +2579,7 @@ VALUES
 (48, 2, '2025-04-17 17:00:00', 356, 1),
 (49, 2, '2025-04-18 18:00:00', 406, 0),
 (50, 2, '2025-04-19 19:00:00', 456, 1);
+GO
 SET NOCOUNT ON;
 
 ----Insert Table ProductItem----
@@ -2587,7 +2594,7 @@ VALUES
 ('Premium Plan - Yearly', 99.99, 365),
 ('Business Plan - Monthly', 19.99, 30),
 ('Business Plan - Yearly', 199.99, 365)
-
+GO
 SET NOCOUNT ON;
 
 ----Insert Table Promotion----
@@ -2598,6 +2605,7 @@ VALUES
 ('Holiday Bonus', 5, 0),               -- $5 off
 ('Black Friday Deal', 50, 1),          -- 50% off
 ('Limited Time Offer', 15, 0);         -- $15 off
+GO
 SET NOCOUNT ON;
 
 ----Insert Table UserProduct----
@@ -2703,6 +2711,7 @@ VALUES
 (112, 1, '2025-05-31 14:18:14', 1, NULL, '2052-10-15 14:18:14'),
 (806, 6, '2025-05-31 14:18:14', 0, 4, '2026-05-31 14:18:14'),
 (922, 1, '2025-07-01 14:18:14', 1, 1, '2052-11-15 14:18:14');
+GO
 SET NOCOUNT ON;
 
 
@@ -2759,6 +2768,7 @@ VALUES
 (437, '2025-03-07 14:20:13', 851),
 (457, '2025-06-15 14:20:13', 919),
 (762, '2025-03-26 14:20:13', 883);
+GO
 SET NOCOUNT ON;
 
 ----Insert Table FavoriteObject----
@@ -3762,6 +3772,7 @@ INSERT INTO FavoriteObject (OwnerId, ObjectId, ObjectTypeId) VALUES ('70', '875'
 INSERT INTO FavoriteObject (OwnerId, ObjectId, ObjectTypeId) VALUES ('359', '875', '2');
 INSERT INTO FavoriteObject (OwnerId, ObjectId, ObjectTypeId) VALUES ('721', '875', '2');
 INSERT INTO FavoriteObject (OwnerId, ObjectId, ObjectTypeId) VALUES ('486', '875', '2');
+GO
 SET NOCOUNT ON;
 
 ---Insert into table ActionRecent---
@@ -3824,6 +3835,7 @@ VALUES (4, 28, 2, N'Unarchived a folder', DATEADD(MINUTE, -90, GETDATE()));
 
 INSERT INTO ActionRecent (UserId, ObjectId, ObjectTypeId, ActionLog, ActionDateTime)
 VALUES (5, 29, 1, N'Logged out', DATEADD(MINUTE, -95, GETDATE()));
+GO
 SET NOCOUNT ON;
 
 ---Insert table SearchHistory---
@@ -3856,7 +3868,9 @@ VALUES (4, N'contract agreement', DATEADD(MINUTE, -80, GETDATE()));
 
 INSERT INTO SearchHistory (UserId, SearchToken, SearchDatetime)
 VALUES (5, N'old file versions', DATEADD(MINUTE, -90, GETDATE()));
+GO
 SET NOCOUNT ON;
+
 ---Insert into table UserSession---
 INSERT INTO UserSession (UserId, Token, CreatedAt, ExpiresAt)
 VALUES (1, 'token_001', GETDATE(), DATEADD(HOUR, 1, GETDATE()));
@@ -3917,6 +3931,7 @@ VALUES (4, 'token_019', DATEADD(MINUTE, -180, GETDATE()), DATEADD(HOUR, 19, GETD
 
 INSERT INTO UserSession (UserId, Token, CreatedAt, ExpiresAt)
 VALUES (5, 'token_020', DATEADD(MINUTE, -190, GETDATE()), DATEADD(HOUR, 20, GETDATE()));
+GO
 SET NOCOUNT ON;
 
 --- insert into AppSetting---
@@ -3973,6 +3988,7 @@ VALUES ('EnableSoundEffects', 'true', 'Enable sound for file interactions');
 
 INSERT INTO AppSetting (SettingKey, SettingValue, Decription)
 VALUES ('EnableSoundEffects', 'false', 'Enable sound for file interactions');
+GO
 SET NOCOUNT ON;
 
 --- table UserSetting---
@@ -4015,6 +4031,7 @@ INSERT INTO SettingUser (SettingId, UserId) VALUES
 -- User 10
 INSERT INTO SettingUser (SettingId, UserId) VALUES
 (1, 10), (3, 10), (6, 10), (9, 10), (11, 10), (14, 10), (15, 10), (17, 10);
+GO
 SET NOCOUNT ON;
 
 
@@ -4031,7 +4048,7 @@ VALUES
 (7, 'Contract agreement with vendor X', 1, GETDATE()),
 (8, 'Research paper on machine learning trends', 1, GETDATE()),
 (9, 'Employee handbook updated 2025', 1, GETDATE());
-
+GO
 -- Insert sample data into SearchIndex (10 rows)
 -- Assuming ObjectTypeId 1 = File, ObjectId references FileId from UserFile
 INSERT INTO SearchIndex (ObjectId, ObjectTypeId, Term, TermFrequency, DocumentLength, TermPositions)
@@ -4075,8 +4092,7 @@ VALUES
 (8, 1, 'trends', 1, 5, '5'),
 (9, 1, 'employee', 1, 2, '1'),
 (9, 1, 'handbook', 1, 2, '2');
-
-delete from SearchIndex
+GO
 select * from SearchIndex
 
 -- Insert sample data into TermIDF (10 rows)
@@ -4122,5 +4138,5 @@ VALUES
 ('trends', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
 ('user', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE()),
 ('vendor', LOG((9 - 1 + 0.5) / (1 + 0.5)), GETDATE());
-
+GO
 select * from TermIDF

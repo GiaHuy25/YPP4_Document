@@ -2,7 +2,7 @@ USE GoogleDrive
 GO
 
  -- Home screen
- -- select User information
+ -- 1.select User information
  Declare @userId int = 1
  select 
 	a.UserName as UserName,
@@ -11,7 +11,7 @@ GO
  where a.UserId =@userId 
 
 
--- select User Setting
+-- 2.select User Setting
 Declare @userId int = 1;
 select 
 	su.SettingUserId,
@@ -23,63 +23,7 @@ join Account a on su.UserId = a.UserId
 join AppSetting s on su.SettingId = s.SettingId
 where a.UserId =@userId
 
-
--- select login user file
-Declare @LoginUser int = 1 
-select 
-	uf.FileId,
-	a.UserName,
-	uf.UserFileName
-from UserFile uf 
-join Account a on uf.OwnerId = a.UserId
-where a.UserId =@LoginUser
-
-
--- select login user folder
-Declare @userId int = 1
-select 
-	fo.FolderId,
-	a.UserName,
-	fo.FolderName
-from Folder fo
-join Account a on fo.OwnerId = a.UserId
-where a.UserId =@userId
-
-
--- select shared file with login user
-Declare @userId int = 102
-select
-	f.FileId,
-	a.UserName,
-	f.UserFileName
-from SharedUser su
-join Account a on su.UserId = a.UserId
-join Share s on su.ShareId = s.ShareId
-join UserFile f on s.ObjectTypeId = 2 and s.ObjectId = f.FileId
-where su.UserId = @userId
-
-
-select * from Share
-select * from Shareduser where shareId =2
-
-
--- select shared folder with login user
-Declare @userId int = 101
-select
-	fo.FolderId,
-	a.UserName,
-	fo.FolderName
-from SharedUser su
-join Account a on su.UserId = a.UserId
-join Share s on su.ShareId = s.ShareId
-join [Folder] fo on s.ObjectTypeId =1 and s.ObjectId = fo.FolderId
-where su.UserId = @userId
-
-select * from share where ObjectTypeId =1
-select * from SharedUser where ShareId = 1
-
-
---Recomment file
+-- 3.Recomment file
 Declare @userId int = 2
 select top 10
 	f.FileId,
@@ -96,7 +40,7 @@ order by ar.ActionDateTime DESC
 select * from ActionRecent
 
 
---Recomment folder
+-- 4.Recomment folder
 Declare @userId int = 3
 select top 10
 	fo.FolderId,
@@ -111,10 +55,63 @@ where ar.UserId = @userId
 order by ar.ActionDateTime DESC
 
 select * from ActionRecent
+--- My Drive Screen
+-- 1.select login user file
+Declare @LoginUser int = 1 
+select 
+	uf.FileId,
+	a.UserName,
+	uf.UserFileName
+from UserFile uf 
+join Account a on uf.OwnerId = a.UserId
+where a.UserId =@LoginUser
 
 
--- trash screen
---select file have been deleted
+-- 2.select login user folder
+Declare @userId int = 1
+select 
+	fo.FolderId,
+	a.UserName,
+	fo.FolderName
+from Folder fo
+join Account a on fo.OwnerId = a.UserId
+where a.UserId =@userId
+
+--- Share with me Screen
+-- 1.select shared file with login user
+Declare @userId int = 102
+select
+	f.FileId,
+	a.UserName,
+	f.UserFileName
+from SharedUser su
+join Account a on su.UserId = a.UserId
+join Share s on su.ShareId = s.ShareId
+join UserFile f on s.ObjectTypeId = 2 and s.ObjectId = f.FileId
+where su.UserId = @userId
+
+
+select * from Share
+select * from Shareduser where shareId =2
+
+
+-- 2.select shared folder with login user
+Declare @userId int = 101
+select
+	fo.FolderId,
+	a.UserName,
+	fo.FolderName
+from SharedUser su
+join Account a on su.UserId = a.UserId
+join Share s on su.ShareId = s.ShareId
+join [Folder] fo on s.ObjectTypeId =1 and s.ObjectId = fo.FolderId
+where su.UserId = @userId
+
+select * from share where ObjectTypeId =1
+select * from SharedUser where ShareId = 1
+
+--- trash screen
+-- 1.select file have been deleted
 Declare @userId int = 704
  SELECT
 	f.FileId,
@@ -131,7 +128,7 @@ WHERE t.UserId = @userId;
 select * from Trash
 
 
---select folder have been deleted
+-- 2.select folder have been deleted
 Declare @userId int = 1
  SELECT 
 	fo.FolderId,
@@ -146,8 +143,8 @@ JOIN Folder fo ON t.ObjectTypeId = 1 AND t.ObjectId = fo.FolderId
 WHERE t.UserId = @userId;
 
 
--- Stared screen
--- Select file
+--- Stared screen
+-- 1. Select file
 Declare @userId int = 794
 select 
 	f.FileId,
