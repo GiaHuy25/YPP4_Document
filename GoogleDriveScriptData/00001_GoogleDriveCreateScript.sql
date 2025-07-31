@@ -63,7 +63,8 @@ GO
 
 CREATE TABLE Permission (
     PermissionId INT PRIMARY KEY IDENTITY(1,1),
-    PermissionName NVARCHAR(50) NOT NULL
+    PermissionName NVARCHAR(50) NOT NULL,
+	PermissionPriority int
 );
 GO
 

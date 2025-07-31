@@ -1022,8 +1022,8 @@ GO
 SET NOCOUNT ON
 
 ----Insert Table Permisson----
-INSERT INTO Permission (PermissionName)
-VALUES ('reader'), ('contributor'), ('owner')
+INSERT INTO Permission (PermissionName,PermissionPriority)
+VALUES ('reader',3), ('contributor',2), ('owner',1)
 GO
 SET NOCOUNT ON
 
