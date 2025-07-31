@@ -392,27 +392,19 @@ ORDER BY rf.FolderPath;
 
 
 -- Full-text search query
--- Searches for files containing the term 'project' or 'proposal'
-DECLARE @k1 FLOAT = 1.2; -- Term frequency saturation parameter
-DECLARE @b FLOAT = 0.75; -- Length normalization parameter
-DECLARE @avgdl FLOAT = (SELECT AVG(CAST(DocumentLength AS FLOAT)) FROM SearchIndex WHERE ObjectTypeId = 1); -- Average document length
-
 SELECT 
-    f.FileId,
-    f.UserFileName,
+    uf.FileId,
+    uf.UserFileName,
     s.Term,
     s.TermFrequency,
-	s.TermPositions,
-    t.IDF,
-    (t.IDF * s.TermFrequency * (@k1 + 1)) / 
-    (s.TermFrequency + @k1 * (1 - @b + @b * (s.DocumentLength / @avgdl))) AS BM25_Score
+	s.TermPositions
 FROM SearchIndex s
-JOIN TermIDF t ON s.Term = t.Term
-JOIN UserFile f ON s.ObjectId = f.FileId
-WHERE s.ObjectTypeId = 1 
-AND s.Term IN ('project', 'proposal')
-ORDER BY BM25_Score DESC;
+JOIN FileContent fc on s.FileContentId = fc.ContentId
+join UserFile uf on fc.FileId = uf.FileId
+WHERE s.Term IN ('project', 'proposal','employ')
+order by s.Bm25Score
 
+-- thêm column bm25_score and table term
 
 select 
 	uf.UserFileName

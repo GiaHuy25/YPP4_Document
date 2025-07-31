@@ -271,49 +271,46 @@ CREATE INDEX idx_folder_name ON Folder(FolderName);
 GO
 
 
--- Drop SearchIndex and create with no TermPositions
-;
-GO
-
-CREATE TABLE SearchIndex (
-    SearchIndexId INT PRIMARY KEY IDENTITY(1,1),
-    ObjectId INT NOT NULL,
-    ObjectTypeId INT NOT NULL,
-    Term NVARCHAR(50) NOT NULL,
-    TermFrequency INT NOT NULL,
-    DocumentLength INT NOT NULL,
-    TermPositions NVARCHAR(MAX),
-    FOREIGN KEY (ObjectTypeId) REFERENCES ObjectType(ObjectTypeId),
-    CONSTRAINT UC_SearchIndex UNIQUE (ObjectId, ObjectTypeId, Term)
-);
-GO
-
--- Indexes for performance
-CREATE NONCLUSTERED INDEX IX_SearchIndex_Term ON SearchIndex (Term, ObjectTypeId);
-GO
-
--- Create TermIDF table to store precomputed IDF values
-
-CREATE TABLE TermIDF (
-    TermIDFId INT PRIMARY KEY IDENTITY(1,1),
-    Term NVARCHAR(50) NOT NULL UNIQUE, -- Matches SearchIndex.Term
-    IDF FLOAT NOT NULL, -- Precomputed IDF value: log((N - n(t) + 0.5) / (n(t) + 0.5) + 1)
-    LastUpdated DATETIME NOT NULL DEFAULT GETDATE(), -- Tracks when IDF was last recalculated
-    CONSTRAINT CHK_IDF_NonNegative CHECK (IDF >= 0)
-);
-GO
-
--- Index for faster term lookups
-CREATE NONCLUSTERED INDEX IX_TermIDF_Term ON TermIDF (Term);
-GO
-
 CREATE TABLE FileContent (
     ContentId INT PRIMARY KEY IDENTITY(1,1),
     FileId INT NOT NULL,
-    ContentChunk NVARCHAR(MAX),
+    ContentChunk NVARCHAR(MAX) NOT NULL,
     ChunkIndex INT NOT NULL,
+    DocumentLength INT NULL, -- Nullable to allow trigger to set it
     CreatedAt DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (FileId) REFERENCES UserFile(FileId)
+    FOREIGN KEY (FileId) REFERENCES UserFile(FileId),
+    CONSTRAINT UC_FileContent UNIQUE (FileId, ChunkIndex)
 );
+GO
+
+-- Table to store unique terms and their associated content
+CREATE TABLE Term (
+    TermId INT PRIMARY KEY IDENTITY(1,1),
+    Term NVARCHAR(50) NOT NULL,
+    FileContentId INT NOT NULL,
+    CreatedAt DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (FileContentId) REFERENCES FileContent(ContentId)
+);
+GO
+
+-- Table to store search index with BM25 scores and IDF
+CREATE TABLE SearchIndex (
+    SearchIndexId INT PRIMARY KEY IDENTITY(1,1),
+    FileContentId INT NOT NULL,
+    Term NVARCHAR(50) NOT NULL,
+    TermFrequency INT NOT NULL,
+    TermPositions NVARCHAR(MAX),
+    Bm25Score FLOAT NOT NULL DEFAULT 0,
+    IDF FLOAT NOT NULL DEFAULT 0,
+    FOREIGN KEY (FileContentId) REFERENCES FileContent(ContentId),
+    CONSTRAINT UC_SearchIndex UNIQUE (FileContentId, Term),
+    CONSTRAINT CHK_IDF_NonNegative CHECK (IDF >= 0)
+);
+GO
+--select * from term
+--select * from SearchIndex
+--select * from FileContent
+CREATE NONCLUSTERED INDEX IX_Term_Term ON Term (Term, FileContentId);
+CREATE NONCLUSTERED INDEX IX_SearchIndex_Term ON SearchIndex (Term, FileContentId);
 GO
 
