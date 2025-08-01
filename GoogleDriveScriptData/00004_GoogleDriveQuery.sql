@@ -404,6 +404,35 @@ join UserFile uf on fc.FileId = uf.FileId
 WHERE s.Term IN ('project', 'proposal','employ')
 order by s.Bm25Score
 
+
+DECLARE @TextQuery nvarchar(50) = 'Requirements';
+
+WITH TokenizedQuery AS (
+    SELECT Term
+    FROM dbo.fn_TokenizeText(@TextQuery)
+),
+AllMatches AS (
+    SELECT s.FileContentId, COUNT(*) as MatchingTerms
+    FROM SearchIndex s
+    JOIN TokenizedQuery tq ON s.Term = tq.Term
+    GROUP BY s.FileContentId
+    HAVING COUNT(*) > 0
+)
+SELECT 
+    fc.FileId,
+	uf.UserFileName,
+    fc.ContentChunk,
+    SUM(s.Bm25Score) AS TotalBm25Score,
+    COUNT(s.Term) AS MatchedTerms,
+    (SELECT COUNT(*) FROM TokenizedQuery) AS TotalQueryTerms
+FROM AllMatches am
+JOIN FileContent fc ON am.FileContentId = fc.ContentId
+JOIN SearchIndex s ON s.FileContentId = fc.ContentId
+join UserFile uf on fc.FileId = uf.FileId
+WHERE s.Term IN (SELECT Term FROM TokenizedQuery)
+GROUP BY fc.FileId, fc.ContentChunk, uf.UserFileName
+ORDER BY TotalBm25Score DESC;
+
 -- thêm column bm25_score and table term
 
 select 
