@@ -391,7 +391,7 @@ WHERE rf.FolderId != 1 -- Exclude the root folder itself, only show subfolders
 ORDER BY rf.FolderPath;
 
 
--- Full-text search query
+-- Full-text search query with token
 SELECT 
     uf.FileId,
     uf.UserFileName,
@@ -404,7 +404,7 @@ join UserFile uf on fc.FileId = uf.FileId
 WHERE s.Term IN ('project', 'proposal','employ')
 order by s.Bm25Score
 
-
+-- Full-text search query with string
 DECLARE @TextQuery nvarchar(50) = 'Requirements';
 
 WITH TokenizedQuery AS (
