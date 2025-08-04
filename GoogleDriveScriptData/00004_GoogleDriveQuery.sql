@@ -405,7 +405,7 @@ WHERE s.Term IN ('project', 'proposal','employ')
 order by s.Bm25Score
 
 -- Full-text search query with string
-DECLARE @TextQuery nvarchar(50) = 'Requirements';
+DECLARE @TextQuery nvarchar(50) = 'software';
 
 WITH TokenizedQuery AS (
     SELECT Term

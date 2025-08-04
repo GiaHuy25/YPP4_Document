@@ -314,4 +314,3 @@ GO
 CREATE NONCLUSTERED INDEX IX_Term_Term ON Term (Term, FileContentId);
 CREATE NONCLUSTERED INDEX IX_SearchIndex_Term ON SearchIndex (Term, FileContentId);
 GO
-
