@@ -79,16 +79,28 @@ where a.UserId =@userId
 
 --- Share with me Screen
 -- 1.select shared file with login user
-Declare @userId int = 102
-select
-	f.FileId,
-	a.UserName,
-	f.UserFileName
-from SharedUser su
-join Account a on su.UserId = a.UserId
-join Share s on su.ShareId = s.ShareId
-join UserFile f on s.ObjectTypeId = 2 and s.ObjectId = f.FileId
-where su.UserId = @userId
+DECLARE @userId INT = 102;
+SELECT
+    f.FileId,
+    a.UserName,
+    f.UserFileName,
+    CASE 
+        WHEN EXISTS (
+            SELECT 1 
+            FROM Share s2 
+            JOIN SharedUser su2 ON s2.ShareId = su2.ShareId 
+            WHERE s2.ObjectTypeId = 1 
+            AND s2.ObjectId = f.FolderId 
+            AND su2.UserId = @userId
+        ) THEN fldr.FolderName
+        ELSE 'share for me'
+    END AS Location
+FROM SharedUser su
+JOIN Account a ON su.UserId = a.UserId
+JOIN Share s ON su.ShareId = s.ShareId
+JOIN UserFile f ON s.ObjectTypeId = 2 AND s.ObjectId = f.FileId
+LEFT JOIN Folder fldr ON f.FolderId = fldr.FolderId
+WHERE su.UserId = @userId;
 
 
 select * from Share
