@@ -4049,3 +4049,12 @@ VALUES
 (8, 'Research paper on machine learning trends', 1, GETDATE()),
 (9, 'Employee handbook updated 2025', 1, GETDATE());
 GO
+
+
+select top 10
+*
+from folder
+order by FolderId DESC
+
+select * from Folder where FolderId = 1005
+delete folder where FolderId = 1006

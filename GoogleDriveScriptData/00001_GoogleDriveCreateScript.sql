@@ -314,3 +314,6 @@ GO
 CREATE NONCLUSTERED INDEX IX_Term_Term ON Term (Term, FileContentId);
 CREATE NONCLUSTERED INDEX IX_SearchIndex_Term ON SearchIndex (Term, FileContentId);
 GO
+
+select * from Account where email = 'aaron85@thompson.com'
+delete Account where Email = 'test@example.com'
