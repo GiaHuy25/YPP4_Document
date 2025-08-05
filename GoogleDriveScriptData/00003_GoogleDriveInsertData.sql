@@ -4038,7 +4038,7 @@ SET NOCOUNT ON;
 -- Insert sample data into FileContent (10 rows)
 INSERT INTO FileContent (FileId, ContentChunk, ChunkIndex, CreatedAt)
 VALUES
-(1, 'Project proposal for new software development', 1, GETDATE()),
+(1, 'Project proposal for new software development', 5, GETDATE()),
 (1, 'Requirements analysis and system design', 2, GETDATE()),
 (2, 'Meeting notes from team sync on 2025-07-25', 1, GETDATE()),
 (3, 'Financial report Q2 2025 summary', 1, GETDATE()),
@@ -4047,9 +4047,10 @@ VALUES
 (6, 'Presentation slides for annual review', 1, GETDATE()),
 (7, 'Contract agreement with vendor X', 1, GETDATE()),
 (8, 'Research paper on machine learning trends', 1, GETDATE()),
-(9, 'Employee handbook updated 2025', 1, GETDATE());
+(9, 'Employee handbook updated 2025', 1, GETDATE()),
+(10, 'for me, for you, for us', 1, GETDATE()),
+(10, 'for me, for you, for us', 2, GETDATE());
 GO
-
 
 select top 20
 *
@@ -4059,4 +4060,5 @@ order by FolderId DESC
 select * from Folder where FolderId = 1005
 delete folder where FolderId = 1006
 
-select * from AppSetting
+select * from FileContent
+select * from SearchIndex

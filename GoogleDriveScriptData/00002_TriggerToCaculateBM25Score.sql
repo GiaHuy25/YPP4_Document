@@ -119,7 +119,7 @@ BEGIN
         END AS Bm25Score,
         CASE 
             WHEN td.DocFreq = 0 OR totals.TotalDocs = 0 OR totals.TotalDocs <= td.DocFreq THEN 0
-            ELSE LOG((totals.TotalDocs - td.DocFreq + 0.5) / (td.DocFreq + 0.5))
+            ELSE GREATEST(LOG((totals.TotalDocs - td.DocFreq + 0.5) / (td.DocFreq + 0.5)), 0)
         END AS IDF
     FROM inserted i
     CROSS APPLY dbo.fn_TokenizeText(i.ContentChunk) token
