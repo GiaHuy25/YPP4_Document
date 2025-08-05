@@ -4051,10 +4051,12 @@ VALUES
 GO
 
 
-select top 10
+select top 20
 *
 from folder
 order by FolderId DESC
 
 select * from Folder where FolderId = 1005
 delete folder where FolderId = 1006
+
+select * from AppSetting
