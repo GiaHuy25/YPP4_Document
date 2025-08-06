@@ -104,7 +104,7 @@ WHERE su.UserId = @userId;
 
 
 select * from Share
-select * from Shareduser where shareId =2
+select * from Shareduser where UserId = 102
 
 
 -- 2.select shared folder with login user
