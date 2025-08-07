@@ -81,3 +81,17 @@ PIVOT (
     )
 ) AS PivotTable
 order by DisplayOrder
+
+
+
+--- stage
+select 1
+from stages ts
+	boards
+	workspaces
+	users
+	cards
+order by ts.Position
+where ts.StageStatus = 'active'
+
+	

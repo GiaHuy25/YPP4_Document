@@ -3934,103 +3934,66 @@ VALUES (5, 'token_020', DATEADD(MINUTE, -190, GETDATE()), DATEADD(HOUR, 20, GETD
 GO
 SET NOCOUNT ON;
 
---- insert into AppSetting---
-INSERT INTO AppSetting (SettingKey, SettingValue, Decription)
-VALUES ('StartPage', 'MyDrive', 'Default start page: My Drive');
+--- insert into AppSettingKey---
+INSERT INTO AppSettingKey (SettingKey, IsBoolean)
+VALUES 
+('StartPage', 0),
+('ThemeMode', 0),
+('Density', 0),
+('OpenPDFMode', 0),
+('ConvertUploadsToGoogleDocs', 1),
+('OfflineModeEnabled', 1),
+('ShowFilePreviewDetails', 1),
+('EnableSoundEffects', 1);
 
-INSERT INTO AppSetting (SettingKey, SettingValue, Decription)
-VALUES ('StartPage', 'Home', 'Default start page: My Drive');
-
-INSERT INTO AppSetting (SettingKey, SettingValue, Decription)
-VALUES ('ThemeMode', 'Light', 'UI theme: Light / Dark / Device default');
-
-INSERT INTO AppSetting (SettingKey, SettingValue, Decription)
-VALUES ('ThemeMode', 'Dark', 'UI theme: Light / Dark / Device default');
-
-INSERT INTO AppSetting (SettingKey, SettingValue, Decription)
-VALUES ('ThemeMode', 'default', 'UI theme: Light / Dark / Device default');
-
-INSERT INTO AppSetting (SettingKey, SettingValue, Decription)
-VALUES ('Density', 'Medium', 'Display density: Low / Medium / High');
-
-INSERT INTO AppSetting (SettingKey, SettingValue, Decription)
-VALUES ('Density', 'Low', 'Display density: Low / Medium / High');
-
-INSERT INTO AppSetting (SettingKey, SettingValue, Decription)
-VALUES ('Density', 'High', 'Display density: Low / Medium / High');
-
-INSERT INTO AppSetting (SettingKey, SettingValue, Decription)
-VALUES ('OpenPDFMode', 'Preview', 'How to open PDF files: New Tab / Preview');
-
-INSERT INTO AppSetting (SettingKey, SettingValue, Decription)
-VALUES ('OpenPDFMode', 'New', 'How to open PDF files: New Tab / Preview');
-
-INSERT INTO AppSetting (SettingKey, SettingValue, Decription)
-VALUES ('ConvertUploadsToGoogleDocs', 'true', 'Convert uploaded files to Google Docs format');
-
-INSERT INTO AppSetting (SettingKey, SettingValue, Decription)
-VALUES ('ConvertUploadsToGoogleDocs', 'false', 'Convert uploaded files to Google Docs format');
-
-INSERT INTO AppSetting (SettingKey, SettingValue, Decription)
-VALUES ('OfflineModeEnabled', 'true', 'Enable offline access for Docs, Sheets, and Slides');
-
-INSERT INTO AppSetting (SettingKey, SettingValue, Decription)
-VALUES ('OfflineModeEnabled', 'false', 'Enable offline access for Docs, Sheets, and Slides');
-
-INSERT INTO AppSetting (SettingKey, SettingValue, Decription)
-VALUES ('ShowFilePreviewDetails', 'true', 'Show detailed info when hovering over a file or folder icon');
-
-INSERT INTO AppSetting (SettingKey, SettingValue, Decription)
-VALUES ('ShowFilePreviewDetails', 'false', 'Show detailed info when hovering over a file or folder icon');
-
-INSERT INTO AppSetting (SettingKey, SettingValue, Decription)
-VALUES ('EnableSoundEffects', 'true', 'Enable sound for file interactions');
-
-INSERT INTO AppSetting (SettingKey, SettingValue, Decription)
-VALUES ('EnableSoundEffects', 'false', 'Enable sound for file interactions');
 GO
 SET NOCOUNT ON;
 
+--- insert into AppSettingOption---
+INSERT INTO AppSettingOption (SettingKeyId, SettingValue)
+VALUES 
+-- StartPage (1)
+(1, 'MyDrive'), (1, 'Home'),
+
+-- ThemeMode (2)
+(2, 'Light'), (2, 'Dark'), (2, 'default'),
+
+-- Density (3)
+(3, 'Medium'), (3, 'Low'), (3, 'High'),
+
+-- OpenPDFMode (4)
+(4, 'Preview'), (4, 'New');
+
+
 --- table UserSetting---
--- User 1
-INSERT INTO SettingUser (SettingId, UserId) VALUES
-(1, 1), (3, 1), (6, 1), (9, 1), (11, 1), (14, 1), (15, 1), (17, 1);
+-- Option settings
+INSERT INTO UserSetting (UserId, AppSettingKeyId, AppSettingOptionId)
+VALUES
+(1, 1, 2),(1, 2, 3),(1, 3, 6),(1, 4, 10),
+(2, 1, 2),(2, 2, 3),(2, 3, 7),(2, 4, 9),
+(3, 1, 2),(3, 2, 5),(3, 3, 8),(3, 4, 9),
+(4, 1, 2),(4, 2, 3),(4, 3, 6),(4, 4, 9),
+(5, 1, 2),(5, 2, 5),(5, 3, 7),(5, 4, 9),
+(6, 1, 2),(6, 2, 4),(6, 3, 7),(6, 4, 9),
+(7, 1, 1),(7, 2, 3),(7, 3, 8),(7, 4, 10),
+(8, 1, 2),(8, 2, 4),(8, 3, 8),(8, 4, 10),
+(9, 1, 2),(9, 2, 5),(9, 3, 8),(9, 4, 10),
+(10, 1, 1),(10, 2, 3),(10, 3, 8),(10, 4, 10);
 
--- User 2
-INSERT INTO SettingUser (SettingId, UserId) VALUES
-(1, 2), (3, 2), (6, 2), (9, 2), (11, 2), (14, 2), (15, 2), (17, 2);
+-- Boolean settings
+INSERT INTO UserSetting (UserId, AppSettingKeyId, BooleanValue)
+VALUES
+(1, 5, 1),(1, 6, 0),(1, 7, 1),(1, 8, 1),
+(2, 5, 1),(2, 6, 1),(2, 7, 0),(2, 8, 1),
+(3, 5, 1),(3, 6, 0),(3, 7, 1),(3, 8, 1),
+(4, 5, 1),(4, 6, 0),(4, 7, 1),(4, 8, 0),
+(5, 5, 0),(5, 6, 0),(5, 7, 0),(5, 8, 1),
+(6, 5, 1),(6, 6, 1),(6, 7, 0),(6, 8, 1),
+(7, 5, 0),(7, 6, 0),(7, 7, 1),(7, 8, 1),
+(8, 5, 1),(8, 6, 1),(8, 7, 1),(8, 8, 0),
+(9, 5, 1),(9, 6, 1),(9, 7, 1),(9, 8, 1),
+(10, 5, 1),(10, 6, 1),(10, 7, 1),(10, 8, 0);
 
--- User 3
-INSERT INTO SettingUser (SettingId, UserId) VALUES
-(1, 3), (3, 3), (6, 3), (9, 3), (11, 3), (14, 3), (15, 3), (17, 3);
-
--- User 4
-INSERT INTO SettingUser (SettingId, UserId) VALUES
-(1, 4), (3, 4), (6, 4), (9, 4), (11, 4), (14, 4), (15, 4), (17, 4);
-
--- User 5
-INSERT INTO SettingUser (SettingId, UserId) VALUES
-(1, 5), (3, 5), (6, 5), (9, 5), (11, 5), (14, 5), (15, 5), (17, 5);
-
--- User 6
-INSERT INTO SettingUser (SettingId, UserId) VALUES
-(1, 6), (3, 6), (6, 6), (9, 6), (11, 6), (14, 6), (15, 6), (17, 6);
-
--- User 7
-INSERT INTO SettingUser (SettingId, UserId) VALUES
-(1, 7), (3, 7), (6, 7), (9, 7), (11, 7), (14, 7), (15, 7), (17, 7);
-
--- User 8
-INSERT INTO SettingUser (SettingId, UserId) VALUES
-(1, 8), (3, 8), (6, 8), (9, 8), (11, 8), (14, 8), (15, 8), (17, 8);
-
--- User 9
-INSERT INTO SettingUser (SettingId, UserId) VALUES
-(1, 9), (3, 9), (6, 9), (9, 9), (11, 9), (14, 9), (15, 9), (17, 9);
-
--- User 10
-INSERT INTO SettingUser (SettingId, UserId) VALUES
-(1, 10), (3, 10), (6, 10), (9, 10), (11, 10), (14, 10), (15, 10), (17, 10);
 GO
 SET NOCOUNT ON;
 

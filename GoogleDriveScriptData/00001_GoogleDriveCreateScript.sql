@@ -35,8 +35,9 @@ IF OBJECT_ID('dbo.Permission', 'U') IS NOT NULL DROP TABLE dbo.Permission;
 IF OBJECT_ID('dbo.ObjectType', 'U') IS NOT NULL DROP TABLE dbo.ObjectType;
 IF OBJECT_ID('dbo.UserSession', 'U') IS NOT NULL DROP TABLE dbo.UserSession;
 IF OBJECT_ID('dbo.Account', 'U') IS NOT NULL DROP TABLE dbo.Account;
-IF OBJECT_ID('dbo.AppSetting', 'U') IS NOT NULL DROP TABLE dbo.AppSetting;
-IF OBJECT_ID('dbo.SettingUser', 'U') IS NOT NULL DROP TABLE dbo.SettingUser;
+IF OBJECT_ID('dbo.AppSettingKey ', 'U') IS NOT NULL DROP TABLE dbo.AppSettingKey;
+IF OBJECT_ID('dbo.AppSettingOption ', 'U') IS NOT NULL DROP TABLE dbo.AppSettingOption;
+IF OBJECT_ID('dbo.UserSetting', 'U') IS NOT NULL DROP TABLE dbo.UserSetting;
 IF OBJECT_ID('dbo.Color', 'U') IS NOT NULL DROP TABLE dbo.Color;
 GO
 
@@ -249,23 +250,38 @@ CREATE TABLE UserSession (
 );
 GO
 
-CREATE TABLE AppSetting(
+CREATE TABLE AppSettingKey(
     SettingId INT PRIMARY KEY IDENTITY(1,1),
-    SettingKey VARCHAR(MAX),
-    SettingValue VARCHAR(MAX),
+    SettingKey VARCHAR(255),
+	IsBoolean Int,
     Decription VARCHAR(MAX)
 );
 GO
 
-CREATE TABLE SettingUser(
-    SettingUserId INT PRIMARY KEY IDENTITY(1,1),
-    SettingId INT,
-    UserId INT,
-    FOREIGN KEY (UserId) REFERENCES Account(UserId),
-    FOREIGN KEY (SettingId ) REFERENCES AppSetting(SettingId )
+CREATE TABLE AppSettingOption (
+    AppSettingOptionId INT PRIMARY KEY IDENTITY(1,1),
+    SettingKeyId INT NOT NULL,
+    SettingValue NVARCHAR(100) NOT NULL,
+    FOREIGN KEY (SettingKeyId) REFERENCES AppSettingKey(SettingId)
 );
 GO
 
+CREATE TABLE UserSetting (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    UserId INT NOT NULL, 
+    AppSettingKeyId INT NOT NULL,
+    BooleanValue BIT NULL,
+    AppSettingOptionId INT NULL,
+    FOREIGN KEY (AppSettingKeyId) REFERENCES AppSettingKey(SettingId),
+    FOREIGN KEY (AppSettingOptionId) REFERENCES AppSettingOption(AppSettingOptionId),
+	FOREIGN KEY (UserId) REFERENCES Account(UserId),
+    CONSTRAINT CK_UserSetting_Value CHECK (
+        (BooleanValue IS NOT NULL AND AppSettingOptionId IS NULL) OR
+        (BooleanValue IS NULL AND AppSettingOptionId IS NOT NULL)
+    ),
+    CONSTRAINT UQ_UserSetting UNIQUE (UserId, AppSettingKeyId)
+);
+GO
 
 CREATE INDEX idx_file_name ON UserFile(UserFileName);
 CREATE INDEX idx_folder_name ON Folder(FolderName);
