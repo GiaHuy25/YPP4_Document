@@ -6,7 +6,8 @@ GO
  Declare @userId int = 1
  select 
 	a.UserName as UserName,
-	a.Email as Email
+	a.Email as Email,
+	a.UserImg
  from Account a
  where a.UserId =@userId 
 
@@ -56,14 +57,18 @@ order by ar.ActionDateTime DESC
 
 select * from ActionRecent
 --- My Drive Screen
--- 1.select login user file
+-- 1.select login user file	
 Declare @LoginUser int = 1 
 select 
 	uf.FileId,
 	a.UserName,
-	uf.UserFileName
+	uf.UserFileName,
+	uf.Size as size,
+	uf.UserFileThumbNailImg,
+	ft.Icon
 from UserFile uf 
 join Account a on uf.OwnerId = a.UserId
+join FileType ft on uf.FileTypeId = ft.FileTypeId
 where a.UserId =@LoginUser
 
 

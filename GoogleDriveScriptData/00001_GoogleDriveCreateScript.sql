@@ -333,3 +333,9 @@ GO
 
 select * from Account where email = 'aaron85@thompson.com'
 delete Account where Email = 'test@example.com'
+
+
+select top 1 
+	*
+from Share
+order by ShareId DESC

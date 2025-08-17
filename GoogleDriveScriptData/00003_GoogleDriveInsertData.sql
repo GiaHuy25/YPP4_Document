@@ -4025,3 +4025,4 @@ delete folder where FolderId = 1006
 
 select * from FileContent
 select * from SearchIndex
+
